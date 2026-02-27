@@ -2,6 +2,12 @@
 
 A zig rewrite of [Goblin-COM roguelike game for 7DRL 2015](https://github.com/skeeto/goblin-com)
 
+### How to run
+
+`make run/release`
+
+---
+
 ### ANSI Escape Sequences
 
 | Code | Where | What it does |

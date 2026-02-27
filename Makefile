@@ -3,3 +3,6 @@ test:
 
 run:
 	zig build run
+
+run/release:
+	zig build -Doptimize=ReleaseSafe run

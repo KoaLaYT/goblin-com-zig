@@ -1,7 +1,7 @@
 const std = @import("std");
 
-const DISPLAY_WIDTH = @import("types.zig").DISPLAY_WIDTH;
-const DISPLAY_HEIGHT = @import("types.zig").DISPLAY_HEIGHT;
+const DISPLAY_WIDTH = @import("constants.zig").DISPLAY_WIDTH;
+const DISPLAY_HEIGHT = @import("constants.zig").DISPLAY_HEIGHT;
 const Font = @import("types.zig").Font;
 const Tile = @import("types.zig").Tile;
 const Panel = @import("types.zig").Panel;
@@ -15,8 +15,9 @@ panels: *Panel,
 const Self = @This();
 
 pub fn init(alloc: std.mem.Allocator) !*Self {
-    var device = try Device.init();
-    errdefer device.deinit();
+    var device = try Device.init(alloc);
+    errdefer device.deinit(alloc);
+
     const self = try alloc.create(Self);
     self.* = Self{
         .device = device,
@@ -44,7 +45,7 @@ pub fn deinit(self: *Self, alloc: std.mem.Allocator) void {
     self.device.move(0, DISPLAY_HEIGHT);
     std.debug.assert(self.panels == &self.base);
     self.base.deinit();
-    self.device.deinit();
+    self.device.deinit(alloc);
     alloc.destroy(self);
 }
 
@@ -78,6 +79,8 @@ pub fn refresh(self: *Self) void {
             }
         }
     }
+
+    self.device.flush();
 }
 
 pub fn set_title(self: *Self, title: []const u8) void {
